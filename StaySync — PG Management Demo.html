@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StaySync — PG Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #2563EB;
+  --blue-light: #EFF6FF;
+  --blue-dark: #1D4ED8;
+  --text: #1E293B;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --bg: #FFFFFF;
+  --bg-page: #F8FAFC;
+  --border: #E2E8F0;
+  --green: #16A34A;
+  --green-light: #F0FDF4;
+  --red: #DC2626;
+  --red-light: #FEF2F2;
+  --amber: #D97706;
+  --amber-light: #FFFBEB;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --radius: 12px;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --text: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --bg: #0F172A;
+    --bg-page: #1E293B;
+    --border: #334155;
+    --blue-light: #1E3A5F;
+    --green-light: #14532D;
+    --red-light: #450A0A;
+    --amber-light: #451A03;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+}
+:root[data-theme="dark"] {
+  --text: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --bg: #0F172A;
+  --bg-page: #1E293B;
+  --border: #334155;
+  --blue-light: #1E3A5F;
+  --green-light: #14532D;
+  --red-light: #450A0A;
+  --amber-light: #451A03;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-page);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  z-index: 10;
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.header-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-mark {
+  width: 32px; height: 32px;
+  background: var(--blue);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 14px;
+}
+.header-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--blue-light);
+  color: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 13px;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 6px 0;
+  padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  z-index: 10;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.nav-item.active { color: var(--blue); }
+.nav-item svg { width: 22px; height: 22px; }
+
+/* Page content */
+.page { display: none; padding: 16px 20px 100px; }
+.page.active { display: block; }
+
+/* Cards */
+.card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+/* Section titles */
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+/* Stat grid */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.stat-card.blue { border-left: 3px solid var(--blue); }
+.stat-card.green { border-left: 3px solid var(--green); }
+.stat-card.amber { border-left: 3px solid var(--amber); }
+.stat-card.red { border-left: 3px solid var(--red); }
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-red { background: var(--red-light); color: var(--red); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+.badge-blue { background: var(--blue-light); color: var(--blue); }
+
+/* Room grid */
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.room-cell {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  transition: transform 0.1s, box-shadow 0.1s;
+  position: relative;
+}
+.room-cell:active { transform: scale(0.95); }
+.room-cell .room-num { font-size: 13px; font-weight: 600; }
+.room-cell .room-cap { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+.room-cell.occupied { background: var(--blue-light); border-color: var(--blue); color: var(--blue); }
+.room-cell.partial { background: var(--amber-light); border-color: var(--amber); color: var(--amber); }
+.room-cell.vacant { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.room-cell.maintenance { background: var(--bg-page); border-color: var(--text-muted); color: var(--text-muted); }
+
+/* Tenant list */
+.tenant-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.tenant-row:last-child { border-bottom: none; }
+.tenant-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 15px;
+  flex-shrink: 0;
+}
+.tenant-info { flex: 1; min-width: 0; }
+.tenant-name { font-size: 14px; font-weight: 600; }
+.tenant-detail { font-size: 12px; color: var(--text-secondary); }
+.tenant-right { text-align: right; flex-shrink: 0; }
+
+/* Invoice list */
+.invoice-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.invoice-row:last-child { border-bottom: none; }
+.invoice-amount { font-size: 15px; font-weight: 700; }
+.invoice-tenant { font-size: 13px; font-weight: 500; }
+.invoice-meta { font-size: 12px; color: var(--text-secondary); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.btn:active { opacity: 0.85; }
+.btn-primary { background: var(--blue); color: white; }
+.btn-outline { background: transparent; color: var(--blue); border: 1.5px solid var(--blue); }
+.btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+.btn-block { width: 100%; }
+.btn-ghost { background: transparent; color: var(--text-secondary); padding: 6px 10px; }
+
+/* Property tabs */
+.prop-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.prop-tabs::-webkit-scrollbar { display: none; }
+.prop-tab {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.prop-tab.active {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+/* Floor label */
+.floor-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 14px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+}
+
+/* Modal / Sheet */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 50;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.sheet-overlay.open { display: flex; }
+.sheet {
+  background: var(--bg);
+  border-radius: 16px 16px 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  animation: slideUp 0.25s ease-out;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+.sheet-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* Detail rows */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-label { color: var(--text-secondary); }
+.detail-value { font-weight: 500; text-align: right; max-width: 60%; }
+
+/* Search */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-page);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+.search-bar input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  outline: none;
+}
+.search-bar input::placeholder { color: var(--text-muted); }
+.search-bar svg { color: var(--text-muted); width: 18px; height: 18px; flex-shrink: 0; }
+
+/* Filter pills */
+.filter-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-secondary);
+}
+.filter-pill.active {
+  background: var(--blue-light);
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+/* Billing summary bar */
+.billing-bar {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+.billing-bar div { height: 100%; }
+.bar-paid { background: var(--green); }
+.bar-pending { background: var(--amber); }
+.bar-overdue { background: var(--red); }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: var(--bg);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; }
+
+/* Tab bar for sub-navigation */
+.sub-tabs {
+  display: flex;
+  border-bottom: 1.5px solid var(--border);
+  margin: -16px -20px 16px;
+  padding: 0 20px;
+}
+.sub-tab {
+  padding: 10px 0;
+  margin-right: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: inherit;
+}
+.sub-tab.active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}
+
+/* Empty action */
+.empty-state {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--text-muted);
+}
+.empty-state svg { margin-bottom: 12px; }
+
+/* Form inputs for add tenant sheet */
+.form-group { margin-bottom: 14px; }
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+}
+.form-input:focus { border-color: var(--blue); }
+.form-row { display: flex; gap: 10px; }
+.form-row .form-group { flex: 1; }
+
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-logo">
+    <div class="logo-mark">S</div>
+    <div>
+      <div class="header-title">StaySync</div>
+      <div class="header-sub">Madhapur, Hyderabad</div>
+    </div>
+  </div>
+  <div class="header-avatar">RK</div>
+</div>
+
+<!-- ==================== DASHBOARD PAGE ==================== -->
+<div id="page-dashboard" class="page active">
+  <div style="margin-bottom:16px;">
+    <div style="font-size:22px;font-weight:700;">Good evening, Rajesh</div>
+    <div style="font-size:13px;color:var(--text-secondary);">Here\u2019s how your properties are doing today.</div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card blue">
+      <div class="stat-value">87%</div>
+      <div class="stat-label">Occupancy rate</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-value">₹4.2L</div>
+      <div class="stat-label">Collected this month</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-value">₹1.1L</div>
+      <div class="stat-label">Pending dues</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-value">6</div>
+      <div class="stat-label">Beds vacant</div>
+    </div>
+  </div>
+
+  <div class="section-title">Upcoming check-outs</div>
+  <div class="card" style="padding:12px 16px;">
+    <div class="tenant-row" onclick="showTenantDetail(0)">
+      <div class="tenant-avatar" style="background:var(--amber-light);color:var(--amber);">PS</div>
+      <div class="tenant-info">
+        <div class="tenant-name">Priya Sharma</div>
+        <div class="tenant-detail">Room 204 \u00b7 Leaves Oct 31</div>
+      </div>
+      <span class="badge badge-amber">5 days</span>
+    </div>
+    <div class="tenant-row" onclick="showTenantDetail(3)">
+      <div class="tenant-avatar" style="background:var(--red-light);color:var(--red);">AK</div>
+      <div class="tenant-info">
+        <div class="tenant-name">Arjun Kapoor</div>
+        <div class="tenant-detail">Room 302 \u00b7 Leaves Nov 5</div>
+      </div>
+      <span class="badge badge-red">10 days</span>
+    </div>
+  </div>
+
+  <div class="section-title">Recent payments</div>
+  <div class="card" style="padding:12px 16px;">
+    <div class="invoice-row">
+      <div>
+        <div class="invoice-tenant">Sneha Reddy</div>
+        <div class="invoice-meta">Room 102 \u00b7 Today, 3:42 PM</div>
+      </div>
+      <div style="text-align:right">
+        <div class="invoice-amount" style="color:var(--green);">₹8,500</div>
+        <span class="badge badge-green" style="font-size:10px;">Paid via UPI</span>
+      </div>
+    </div>
+    <div class="invoice-row">
+      <div>
+        <div class="invoice-tenant">Mohammed Irfan</div>
+        <div class="invoice-meta">Room 301 \u00b7 Yesterday</div>
+      </div>
+      <div style="text-align:right">
+        <div class="invoice-amount" style="color:var(--green);">₹9,200</div>
+        <span class="badge badge-green" style="font-size:10px;">Paid cash</span>
+      </div>
+    </div>
+    <div class="invoice-row">
+      <div>
+        <div class="invoice-tenant">Vikram Desai</div>
+        <div class="invoice-meta">Room 203 \u00b7 Oct 22</div>
+      </div>
+      <div style="text-align:right">
+        <div class="invoice-amount" style="color:var(--amber);">₹4,000</div>
+        <span class="badge badge-amber" style="font-size:10px;">Partial</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PROPERTY PAGE ==================== -->
+<div id="page-property" class="page">
+  <div class="section-title" style="font-size:17px;margin-bottom:4px;">Properties</div>
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">3 properties \u00b7 52 beds total</div>
+
+  <div class="prop-tabs" id="propTabs">
+    <button class="prop-tab active" onclick="switchProperty(0,this)">Sri Sai PG</button>
+    <button class="prop-tab" onclick="switchProperty(1,this)">Lakshmi Residency</button>
+    <button class="prop-tab" onclick="switchProperty(2,this)">Green Valley PG</button>
+  </div>
+
+  <div id="propertyView"></div>
+</div>
+
+<!-- ==================== TENANTS PAGE ==================== -->
+<div id="page-tenants" class="page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <div>
+      <div class="section-title" style="font-size:17px;margin-bottom:0;">Tenants</div>
+      <div style="font-size:13px;color:var(--text-secondary);">38 active across all properties</div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openAddTenant()">+ Add</button>
+  </div>
+
+  <div class="search-bar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search tenants\u2026" id="tenantSearch" oninput="filterTenants()">
+  </div>
+
+  <div class="filter-row" id="tenantFilters">
+    <button class="filter-pill active" onclick="filterByStatus('all',this)">All</button>
+    <button class="filter-pill" onclick="filterByStatus('active',this)">Active</button>
+    <button class="filter-pill" onclick="filterByStatus('due',this)">Dues pending</button>
+    <button class="filter-pill" onclick="filterByStatus('expiring',this)">Expiring soon</button>
+  </div>
+
+  <div class="card" style="padding:4px 16px;" id="tenantList"></div>
+</div>
+
+<!-- ==================== BILLING PAGE ==================== -->
+<div id="page-billing" class="page">
+  <div class="section-title" style="font-size:17px;margin-bottom:4px;">Billing &amp; Collection</div>
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">October 2026</div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+      <span style="font-size:13px;font-weight:500;">Collection progress</span>
+      <span style="font-size:22px;font-weight:700;">79%</span>
+    </div>
+    <div class="billing-bar">
+      <div class="bar-paid" style="width:65%"></div>
+      <div class="bar-pending" style="width:20%"></div>
+      <div class="bar-overdue" style="width:15%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--text-muted);">
+      <span>₹4.2L paid</span><span>₹76K pending</span><span>₹34K overdue</span>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button class="btn btn-primary btn-sm btn-block" onclick="showToast('Reminders sent to 8 tenants via WhatsApp')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      Send reminders
+    </button>
+    <button class="btn btn-outline btn-sm btn-block" onclick="openGenInvoice()">Generate invoices</button>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchBillingTab('all',this)">All</button>
+    <button class="sub-tab" onclick="switchBillingTab('pending',this)">Pending</button>
+    <button class="sub-tab" onclick="switchBillingTab('overdue',this)">Overdue</button>
+    <button class="sub-tab" onclick="switchBillingTab('paid',this)">Paid</button>
+  </div>
+
+  <div id="invoiceList"></div>
+</div>
+
+<!-- ==================== BOTTOM NAV ==================== -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="navigateTo('dashboard',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+  <button class="nav-item" onclick="navigateTo('property',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Rooms
+  </button>
+  <button class="nav-item" onclick="navigateTo('tenants',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    Tenants
+  </button>
+  <button class="nav-item" onclick="navigateTo('billing',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    Billing
+  </button>
+</nav>
+
+<!-- Sheet overlay -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet(event)">
+  <div class="sheet" id="sheetContent" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== SYNTHETIC DATA =====
+const properties = [
+  {
+    name: "Sri Sai PG", address: "Plot 42, Madhapur, Hyderabad", beds: 24, occupancy: 21,
+    floors: [
+      { name: "Ground floor", rooms: [
+        { num: "G01", type: "Triple", cap: 3, filled: 3, status: "occupied" },
+        { num: "G02", type: "Double", cap: 2, filled: 2, status: "occupied" },
+        { num: "G03", type: "Triple", cap: 3, filled: 2, status: "partial" },
+        { num: "G04", type: "Double", cap: 2, filled: 0, status: "vacant" },
+      ]},
+      { name: "First floor", rooms: [
+        { num: "101", type: "Single", cap: 1, filled: 1, status: "occupied" },
+        { num: "102", type: "Double", cap: 2, filled: 2, status: "occupied" },
+        { num: "103", type: "Triple", cap: 3, filled: 3, status: "occupied" },
+        { num: "104", type: "Double", cap: 2, filled: 2, status: "occupied" },
+      ]},
+      { name: "Second floor", rooms: [
+        { num: "201", type: "Single", cap: 1, filled: 1, status: "occupied" },
+        { num: "202", type: "Triple", cap: 3, filled: 3, status: "occupied" },
+        { num: "203", type: "Double", cap: 2, filled: 2, status: "occupied" },
+        { num: "204", type: "Single", cap: 1, filled: 1, status: "occupied" },
+      ]},
+    ]
+  },
+  {
+    name: "Lakshmi Residency", address: "Road No 12, Banjara Hills, Hyderabad", beds: 16, occupancy: 13,
+    floors: [
+      { name: "First floor", rooms: [
+        { num: "101", type: "Double", cap: 2, filled: 2, status: "occupied" },
+        { num: "102", type: "Double", cap: 2, filled: 1, status: "partial" },
+        { num: "103", type: "Triple", cap: 3, filled: 3, status: "occupied" },
+        { num: "104", type: "Single", cap: 1, filled: 0, status: "maintenance" },
+      ]},
+      { name: "Second floor", rooms: [
+        { num: "201", type: "Double", cap: 2, filled: 2, status: "occupied" },
+        { num: "202", type: "Triple", cap: 3, filled: 3, status: "occupied" },
+        { num: "203", type: "Double", cap: 2, filled: 2, status: "occupied" },
+        { num: "204", type: "Single", cap: 1, filled: 0, status: "vacant" },
+      ]},
+    ]
+  },
+  {
+    name: "Green Valley PG", address: "Survey 78, Gachibowli, Hyderabad", beds: 12, occupancy: 10,
+    floors: [
+      { name: "Ground floor", rooms: [
+        { num: "G01", type: "Double", cap: 2, filled: 2, status: "occupied" },
+        { num: "G02", type: "Triple", cap: 3, filled: 3, status: "occupied" },
+        { num: "G03", type: "Double", cap: 2, filled: 1, status: "partial" },
+      ]},
+      { name: "First floor", rooms: [
+        { num: "101", type: "Triple", cap: 3, filled: 3, status: "occupied" },
+        { num: "102", type: "Double", cap: 2, filled: 1, status: "partial" },
+      ]},
+    ]
+  }
+];
+
+const tenants = [
+  { name:"Priya Sharma", room:"204", property:"Sri Sai PG", phone:"9876543210", rent:7500, paid:true, joinDate:"2026-03-15", endDate:"2026-10-31", aadhaar:"XXXX-XXXX-4521", status:"expiring", gender:"F", occupation:"Software Engineer, TCS" },
+  { name:"Sneha Reddy", room:"102", property:"Sri Sai PG", phone:"9845123456", rent:8500, paid:true, joinDate:"2026-01-10", endDate:"2027-01-10", aadhaar:"XXXX-XXXX-7832", status:"active", gender:"F", occupation:"UI Designer, Infosys" },
+  { name:"Vikram Desai", room:"203", property:"Sri Sai PG", phone:"9123456780", rent:8000, paid:false, partialAmt:4000, joinDate:"2026-06-01", endDate:"2027-06-01", aadhaar:"XXXX-XXXX-3345", status:"due", gender:"M", occupation:"Data Analyst, Deloitte" },
+  { name:"Arjun Kapoor", room:"302", property:"Lakshmi Residency", phone:"9988776655", rent:9000, paid:false, joinDate:"2026-02-01", endDate:"2026-11-05", aadhaar:"XXXX-XXXX-1190", status:"expiring", gender:"M", occupation:"Product Manager, Amazon" },
+  { name:"Mohammed Irfan", room:"301", property:"Lakshmi Residency", phone:"9009876543", rent:9200, paid:true, joinDate:"2026-04-20", endDate:"2027-04-20", aadhaar:"XXXX-XXXX-6678", status:"active", gender:"M", occupation:"DevOps, Microsoft" },
+  { name:"Kavya Nair", room:"G01", property:"Sri Sai PG", phone:"9567890123", rent:7000, paid:true, joinDate:"2026-05-12", endDate:"2027-05-12", aadhaar:"XXXX-XXXX-2245", status:"active", gender:"F", occupation:"HR Executive, Wipro" },
+  { name:"Ravi Teja", room:"103", property:"Sri Sai PG", phone:"9345678901", rent:7500, paid:false, joinDate:"2026-07-01", endDate:"2027-07-01", aadhaar:"XXXX-XXXX-9901", status:"due", gender:"M", occupation:"Frontend Dev, Zoho" },
+  { name:"Ananya Iyer", room:"201", property:"Lakshmi Residency", phone:"9234567890", rent:8500, paid:true, joinDate:"2026-08-15", endDate:"2027-08-15", aadhaar:"XXXX-XXXX-5567", status:"active", gender:"F", occupation:"Content Writer, Swiggy" },
+  { name:"Sai Krishna", room:"G02", property:"Green Valley PG", phone:"9678901234", rent:7000, paid:true, joinDate:"2026-02-10", endDate:"2027-02-10", aadhaar:"XXXX-XXXX-8834", status:"active", gender:"M", occupation:"Tester, Accenture" },
+  { name:"Meera Joshi", room:"101", property:"Green Valley PG", phone:"9456789012", rent:7500, paid:false, joinDate:"2026-09-01", endDate:"2027-09-01", aadhaar:"XXXX-XXXX-1123", status:"due", gender:"F", occupation:"Accountant, KPMG" },
+  { name:"Rahul Pandey", room:"G03", property:"Sri Sai PG", phone:"9112233445", rent:7500, paid:true, joinDate:"2026-04-01", endDate:"2027-04-01", aadhaar:"XXXX-XXXX-3356", status:"active", gender:"M", occupation:"ML Engineer, Google" },
+  { name:"Divya Mehta", room:"201", property:"Sri Sai PG", phone:"9223344556", rent:8000, paid:true, joinDate:"2026-06-15", endDate:"2027-06-15", aadhaar:"XXXX-XXXX-7789", status:"active", gender:"F", occupation:"Business Analyst, Capgemini" },
+];
+
+const invoices = [
+  { tenant:"Sneha Reddy", room:"102", amount:8500, status:"paid", date:"Oct 26", method:"UPI" },
+  { tenant:"Mohammed Irfan", room:"301", amount:9200, status:"paid", date:"Oct 25", method:"Cash" },
+  { tenant:"Kavya Nair", room:"G01", amount:7000, status:"paid", date:"Oct 24", method:"UPI" },
+  { tenant:"Vikram Desai", room:"203", amount:8000, status:"pending", date:"Due Oct 28", method:"₹4,000 partial" },
+  { tenant:"Ravi Teja", room:"103", amount:7500, status:"overdue", date:"Due Oct 5", method:"No payment" },
+  { tenant:"Meera Joshi", room:"101", amount:7500, status:"overdue", date:"Due Oct 5", method:"No payment" },
+  { tenant:"Arjun Kapoor", room:"302", amount:9000, status:"pending", date:"Due Oct 28", method:"Not yet" },
+  { tenant:"Priya Sharma", room:"204", amount:7500, status:"paid", date:"Oct 22", method:"Bank transfer" },
+  { tenant:"Sai Krishna", room:"G02", amount:7000, status:"paid", date:"Oct 20", method:"UPI" },
+  { tenant:"Divya Mehta", room:"201", amount:8000, status:"paid", date:"Oct 19", method:"UPI" },
+  { tenant:"Rahul Pandey", room:"G03", amount:7500, status:"paid", date:"Oct 18", method:"Cash" },
+  { tenant:"Ananya Iyer", room:"201", amount:8500, status:"paid", date:"Oct 17", method:"UPI" },
+];
+
+// ===== NAVIGATION =====
+function navigateTo(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ===== PROPERTY MODULE =====
+let currentProp = 0;
+function switchProperty(idx, btn) {
+  currentProp = idx;
+  document.querySelectorAll('.prop-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderProperty();
+}
+
+function renderProperty() {
+  const p = properties[currentProp];
+  const vacant = p.beds - p.occupancy;
+  let html = `
+    <div class="card">
+      <div style="font-size:15px;font-weight:600;margin-bottom:2px;">${p.name}</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">${p.address}</div>
+      <div style="display:flex;gap:16px;font-size:13px;">
+        <div><span style="font-weight:700;color:var(--blue);">${p.occupancy}</span><span style="color:var(--text-secondary);"> / ${p.beds} beds</span></div>
+        <div><span style="font-weight:700;color:var(--green);">${vacant}</span><span style="color:var(--text-secondary);"> vacant</span></div>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--blue);"></div>Full</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--amber);"></div>Partial</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green);"></div>Vacant</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--text-muted);"></div>Maintenance</div>
+    </div>`;
+  p.floors.forEach(f => {
+    html += `<div class="floor-label">${f.name}</div><div class="room-grid">`;
+    f.rooms.forEach(r => {
+      html += `<div class="room-cell ${r.status}" onclick='showRoomDetail(${JSON.stringify(r).replace(/'/g,"&#39;")})'>
+        <div class="room-num">${r.num}</div>
+        <div class="room-cap">${r.filled}/${r.cap}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('propertyView').innerHTML = html;
+}
+
+function showRoomDetail(room) {
+  const p = properties[currentProp];
+  const roomTenants = tenants.filter(t => t.room === room.num && t.property === p.name);
+  let tenantHtml = '';
+  if (roomTenants.length) {
+    roomTenants.forEach(t => {
+      const colors = t.gender === 'F' ? 'background:var(--blue-light);color:var(--blue);' : 'background:var(--green-light);color:var(--green);';
+      tenantHtml += `<div class="tenant-row" style="cursor:default;">
+        <div class="tenant-avatar" style="${colors}">${t.name.split(' ').map(w=>w[0]).join('')}</div>
+        <div class="tenant-info">
+          <div class="tenant-name">${t.name}</div>
+          <div class="tenant-detail">${t.occupation}</div>
+        </div>
+        <span class="badge ${t.paid ? 'badge-green' : 'badge-red'}">${t.paid ? 'Paid' : 'Due'}</span>
+      </div>`;
+    });
+  } else {
+    tenantHtml = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px;">No tenants assigned</div>`;
+  }
+
+  const statusLabel = { occupied: 'Fully occupied', partial: 'Partially occupied', vacant: 'Vacant', maintenance: 'Under maintenance' };
+
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Room ${room.num}</div>
+    <div class="detail-row"><span class="detail-label">Room type</span><span class="detail-value">${room.type} sharing</span></div>
+    <div class="detail-row"><span class="detail-label">Capacity</span><span class="detail-value">${room.cap} beds</span></div>
+    <div class="detail-row"><span class="detail-label">Occupied</span><span class="detail-value">${room.filled} beds</span></div>
+    <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge badge-${room.status==='occupied'?'blue':room.status==='partial'?'amber':room.status==='vacant'?'green':'red'}">${statusLabel[room.status]}</span></span></div>
+    <div class="detail-row"><span class="detail-label">Property</span><span class="detail-value">${p.name}</span></div>
+    <div style="margin-top:16px;font-size:14px;font-weight:600;margin-bottom:8px;">Tenants in this room</div>
+    ${tenantHtml}
+    ${room.status !== 'occupied' && room.status !== 'maintenance' ? `<button class="btn btn-primary btn-block" style="margin-top:12px;" onclick="closeSheetDirect();navigateTo('tenants',document.querySelectorAll('.nav-item')[2]);openAddTenant()">Assign tenant</button>` : ''}
+  `;
+  openSheet();
+}
+
+// ===== TENANTS MODULE =====
+let tenantFilter = 'all';
+function renderTenants(list) {
+  let html = '';
+  list.forEach((t, i) => {
+    const origIdx = tenants.indexOf(t);
+    const colors = t.gender === 'F' ? 'background:var(--blue-light);color:var(--blue);' : 'background:var(--green-light);color:var(--green);';
+    const statusBadge = t.status === 'due' ? '<span class="badge badge-red">Due</span>' :
+                        t.status === 'expiring' ? '<span class="badge badge-amber">Expiring</span>' :
+                        '<span class="badge badge-green">Active</span>';
+    html += `<div class="tenant-row" onclick="showTenantDetail(${origIdx})">
+      <div class="tenant-avatar" style="${colors}">${t.name.split(' ').map(w=>w[0]).join('')}</div>
+      <div class="tenant-info">
+        <div class="tenant-name">${t.name}</div>
+        <div class="tenant-detail">${t.room} \u00b7 ${t.property}</div>
+      </div>
+      <div class="tenant-right">${statusBadge}</div>
+    </div>`;
+  });
+  if (!list.length) html = `<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">No tenants found</div>`;
+  document.getElementById('tenantList').innerHTML = html;
+}
+
+function filterTenants() {
+  const q = document.getElementById('tenantSearch').value.toLowerCase();
+  let filtered = tenants.filter(t => {
+    const matchSearch = !q || t.name.toLowerCase().includes(q) || t.room.toLowerCase().includes(q) || t.property.toLowerCase().includes(q);
+    const matchFilter = tenantFilter === 'all' || t.status === tenantFilter;
+    return matchSearch && matchFilter;
+  });
+  renderTenants(filtered);
+}
+function filterByStatus(status, btn) {
+  tenantFilter = status;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  filterTenants();
+}
+
+function showTenantDetail(idx) {
+  const t = tenants[idx];
+  const colors = t.gender === 'F' ? 'background:var(--blue-light);color:var(--blue);' : 'background:var(--green-light);color:var(--green);';
+  const payStatus = t.paid ? `<span class="badge badge-green">Paid \u2014 ₹${t.rent.toLocaleString('en-IN')}</span>` :
+                    t.partialAmt ? `<span class="badge badge-amber">Partial \u2014 ₹${t.partialAmt.toLocaleString('en-IN')} of ₹${t.rent.toLocaleString('en-IN')}</span>` :
+                    `<span class="badge badge-red">Unpaid \u2014 ₹${t.rent.toLocaleString('en-IN')}</span>`;
+
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <div class="tenant-avatar" style="${colors};width:48px;height:48px;font-size:18px;">${t.name.split(' ').map(w=>w[0]).join('')}</div>
+      <div>
+        <div style="font-size:17px;font-weight:700;">${t.name}</div>
+        <div style="font-size:13px;color:var(--text-secondary);">${t.occupation}</div>
+      </div>
+    </div>
+    <div class="detail-row"><span class="detail-label">Room</span><span class="detail-value">${t.room} \u00b7 ${t.property}</span></div>
+    <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value">${t.phone}</span></div>
+    <div class="detail-row"><span class="detail-label">Aadhaar</span><span class="detail-value">${t.aadhaar}</span></div>
+    <div class="detail-row"><span class="detail-label">Rent</span><span class="detail-value">₹${t.rent.toLocaleString('en-IN')}/month</span></div>
+    <div class="detail-row"><span class="detail-label">Oct payment</span><span class="detail-value">${payStatus}</span></div>
+    <div class="detail-row"><span class="detail-label">Move-in</span><span class="detail-value">${formatDate(t.joinDate)}</span></div>
+    <div class="detail-row"><span class="detail-label">Stay until</span><span class="detail-value">${formatDate(t.endDate)}</span></div>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button class="btn btn-primary btn-block btn-sm" onclick="showToast('WhatsApp reminder sent to ${t.name}');closeSheetDirect();">Send reminder</button>
+      <button class="btn btn-outline btn-block btn-sm" onclick="showToast('Payment recorded for ${t.name}');closeSheetDirect();">Record payment</button>
+    </div>
+  `;
+  openSheet();
+}
+
+function openAddTenant() {
+  const roomOptions = properties.flatMap(p =>
+    p.floors.flatMap(f =>
+      f.rooms.filter(r => r.status !== 'occupied' && r.status !== 'maintenance')
+        .map(r => `<option value="${r.num}|${p.name}">${r.num} \u2014 ${p.name} (${r.cap - r.filled} beds free)</option>`)
+    )
+  ).join('');
+
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Add new tenant</div>
+    <div class="form-group">
+      <label class="form-label">Full name</label>
+      <input class="form-input" placeholder="e.g. Aisha Khan" id="newName">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" placeholder="9XXXXXXXXX" id="newPhone">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender</label>
+        <select class="form-input" id="newGender"><option value="F">Female</option><option value="M">Male</option></select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Assign room</label>
+      <select class="form-input" id="newRoom">${roomOptions}</select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Monthly rent</label>
+        <input class="form-input" placeholder="₹7,500" id="newRent">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Move-in date</label>
+        <input class="form-input" type="date" value="2026-10-26" id="newDate">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Occupation</label>
+      <input class="form-input" placeholder="e.g. Software Engineer, TCS" id="newOcc">
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:4px;" onclick="addTenant()">Add tenant</button>
+  `;
+  openSheet();
+}
+
+function addTenant() {
+  const name = document.getElementById('newName').value.trim();
+  if (!name) { showToast('Please enter a name'); return; }
+  const roomVal = document.getElementById('newRoom').value.split('|');
+  tenants.push({
+    name: name,
+    room: roomVal[0],
+    property: roomVal[1],
+    phone: document.getElementById('newPhone').value || '9000000000',
+    rent: parseInt(document.getElementById('newRent').value.replace(/\D/g,'')) || 7500,
+    paid: false,
+    joinDate: document.getElementById('newDate').value || '2026-10-26',
+    endDate: '2027-10-26',
+    aadhaar: 'XXXX-XXXX-0000',
+    status: 'active',
+    gender: document.getElementById('newGender').value,
+    occupation: document.getElementById('newOcc').value || 'Not specified'
+  });
+  closeSheetDirect();
+  filterTenants();
+  showToast(`${name} added successfully`);
+}
+
+// ===== BILLING MODULE =====
+let billingFilter = 'all';
+function renderInvoices() {
+  let filtered = billingFilter === 'all' ? invoices : invoices.filter(i => i.status === billingFilter);
+  let html = '';
+  filtered.forEach(inv => {
+    const color = inv.status === 'paid' ? 'var(--green)' : inv.status === 'overdue' ? 'var(--red)' : 'var(--amber)';
+    const badgeClass = inv.status === 'paid' ? 'badge-green' : inv.status === 'overdue' ? 'badge-red' : 'badge-amber';
+    const label = inv.status === 'paid' ? 'Paid' : inv.status === 'overdue' ? 'Overdue' : 'Pending';
+    html += `<div class="card" style="padding:14px 16px;cursor:pointer;" onclick="showInvoiceDetail(${invoices.indexOf(inv)})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-size:14px;font-weight:600;">${inv.tenant}</div>
+          <div style="font-size:12px;color:var(--text-secondary);">Room ${inv.room} \u00b7 ${inv.date}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:16px;font-weight:700;color:${color};">₹${inv.amount.toLocaleString('en-IN')}</div>
+          <span class="badge ${badgeClass}" style="font-size:10px;">${label}</span>
+        </div>
+      </div>
+      ${inv.method ? `<div style="font-size:11px;color:var(--text-muted);margin-top:6px;">${inv.method}</div>` : ''}
+    </div>`;
+  });
+  if (!filtered.length) html = `<div style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No invoices in this category</div>`;
+  document.getElementById('invoiceList').innerHTML = html;
+}
+
+function switchBillingTab(tab, btn) {
+  billingFilter = tab;
+  document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderInvoices();
+}
+
+function showInvoiceDetail(idx) {
+  const inv = invoices[idx];
+  const t = tenants.find(t => t.name === inv.tenant);
+  const charges = [
+    { label: 'Base rent', amount: inv.amount - 500 },
+    { label: 'Electricity', amount: 350 },
+    { label: 'Maintenance', amount: 150 },
+  ];
+  let chargeHtml = charges.map(c =>
+    `<div class="detail-row"><span class="detail-label">${c.label}</span><span class="detail-value">₹${c.amount.toLocaleString('en-IN')}</span></div>`
+  ).join('');
+
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Invoice \u2014 ${inv.tenant}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-size:13px;color:var(--text-secondary);">Room ${inv.room} \u00b7 October 2026</div>
+      <span class="badge ${inv.status==='paid'?'badge-green':inv.status==='overdue'?'badge-red':'badge-amber'}">${inv.status.charAt(0).toUpperCase()+inv.status.slice(1)}</span>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;">
+      ${chargeHtml}
+      <div style="display:flex;justify-content:space-between;padding:10px 0 0;border-top:1.5px solid var(--border);margin-top:4px;font-size:14px;font-weight:700;">
+        <span>Total</span><span>₹${inv.amount.toLocaleString('en-IN')}</span>
+      </div>
+    </div>
+    ${inv.status !== 'paid' ? `<div style="display:flex;gap:8px;">
+      <button class="btn btn-primary btn-block btn-sm" onclick="markPaid(${idx})">Mark as paid</button>
+      <button class="btn btn-outline btn-block btn-sm" onclick="showToast('Reminder sent via WhatsApp');closeSheetDirect();">Send reminder</button>
+    </div>` : `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:4px 0;">${inv.method} \u00b7 ${inv.date}</div>`}
+  `;
+  openSheet();
+}
+
+function markPaid(idx) {
+  invoices[idx].status = 'paid';
+  invoices[idx].method = 'Marked paid manually';
+  invoices[idx].date = 'Oct 26';
+  closeSheetDirect();
+  renderInvoices();
+  showToast('Payment recorded successfully');
+}
+
+function openGenInvoice() {
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Generate invoices</div>
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">This will create November invoices for all active tenants based on their room rent and configured charges.</div>
+    <div class="detail-row"><span class="detail-label">Month</span><span class="detail-value">November 2026</span></div>
+    <div class="detail-row"><span class="detail-label">Tenants</span><span class="detail-value">38 active</span></div>
+    <div class="detail-row"><span class="detail-label">Due date</span><span class="detail-value">Nov 5, 2026</span></div>
+    <div class="detail-row"><span class="detail-label">Includes</span><span class="detail-value">Rent + Electricity + Maintenance</span></div>
+    <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="showToast('38 invoices generated for November');closeSheetDirect();">Generate 38 invoices</button>
+  `;
+  openSheet();
+}
+
+// ===== SHEET & TOAST =====
+function openSheet() {
+  document.getElementById('sheetOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet(e) {
+  if (e.target === document.getElementById('sheetOverlay')) closeSheetDirect();
+}
+function closeSheetDirect() {
+  document.getElementById('sheetOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function formatDate(d) {
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+
+// ===== INIT =====
+renderProperty();
+renderTenants(tenants);
+renderInvoices();
+</script>
+</body>
+</html>

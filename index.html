@@ -615,9 +615,9 @@ select.form-input {
       <div class="stat-value">₹1.1L</div>
       <div class="stat-label">Pending dues</div>
     </div>
-    <div class="stat-card red">
+    <div class="stat-card red" style="cursor:pointer;" onclick="showVacantRooms()">
       <div class="stat-value">6</div>
-      <div class="stat-label">Beds vacant</div>
+      <div class="stat-label">Beds vacant →</div>
     </div>
   </div>
 
@@ -743,6 +743,16 @@ select.form-input {
     <button class="btn btn-outline btn-sm btn-block" onclick="openGenInvoice()">Generate invoices</button>
   </div>
 
+  <div style="margin-bottom:14px;">
+    <button class="btn btn-block" style="background:var(--bg);border:1.5px solid var(--border);color:var(--text);font-size:13px;font-weight:500;justify-content:space-between;" onclick="openReportBuilder()">
+      <span style="display:flex;align-items:center;gap:6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Generate report
+      </span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+
   <div class="sub-tabs">
     <button class="sub-tab active" onclick="switchBillingTab('all',this)">All</button>
     <button class="sub-tab" onclick="switchBillingTab('pending',this)">Pending</button>
@@ -841,18 +851,18 @@ const properties = [
 ];
 
 const tenants = [
-  { name:"Priya Sharma", room:"204", property:"Sri Sai PG", phone:"9876543210", rent:7500, paid:true, joinDate:"2026-03-15", endDate:"2026-10-31", aadhaar:"XXXX-XXXX-4521", status:"expiring", gender:"F", occupation:"Software Engineer, TCS" },
-  { name:"Sneha Reddy", room:"102", property:"Sri Sai PG", phone:"9845123456", rent:8500, paid:true, joinDate:"2026-01-10", endDate:"2027-01-10", aadhaar:"XXXX-XXXX-7832", status:"active", gender:"F", occupation:"UI Designer, Infosys" },
-  { name:"Vikram Desai", room:"203", property:"Sri Sai PG", phone:"9123456780", rent:8000, paid:false, partialAmt:4000, joinDate:"2026-06-01", endDate:"2027-06-01", aadhaar:"XXXX-XXXX-3345", status:"due", gender:"M", occupation:"Data Analyst, Deloitte" },
-  { name:"Arjun Kapoor", room:"302", property:"Lakshmi Residency", phone:"9988776655", rent:9000, paid:false, joinDate:"2026-02-01", endDate:"2026-11-05", aadhaar:"XXXX-XXXX-1190", status:"expiring", gender:"M", occupation:"Product Manager, Amazon" },
-  { name:"Mohammed Irfan", room:"301", property:"Lakshmi Residency", phone:"9009876543", rent:9200, paid:true, joinDate:"2026-04-20", endDate:"2027-04-20", aadhaar:"XXXX-XXXX-6678", status:"active", gender:"M", occupation:"DevOps, Microsoft" },
-  { name:"Kavya Nair", room:"G01", property:"Sri Sai PG", phone:"9567890123", rent:7000, paid:true, joinDate:"2026-05-12", endDate:"2027-05-12", aadhaar:"XXXX-XXXX-2245", status:"active", gender:"F", occupation:"HR Executive, Wipro" },
-  { name:"Ravi Teja", room:"103", property:"Sri Sai PG", phone:"9345678901", rent:7500, paid:false, joinDate:"2026-07-01", endDate:"2027-07-01", aadhaar:"XXXX-XXXX-9901", status:"due", gender:"M", occupation:"Frontend Dev, Zoho" },
-  { name:"Ananya Iyer", room:"201", property:"Lakshmi Residency", phone:"9234567890", rent:8500, paid:true, joinDate:"2026-08-15", endDate:"2027-08-15", aadhaar:"XXXX-XXXX-5567", status:"active", gender:"F", occupation:"Content Writer, Swiggy" },
-  { name:"Sai Krishna", room:"G02", property:"Green Valley PG", phone:"9678901234", rent:7000, paid:true, joinDate:"2026-02-10", endDate:"2027-02-10", aadhaar:"XXXX-XXXX-8834", status:"active", gender:"M", occupation:"Tester, Accenture" },
-  { name:"Meera Joshi", room:"101", property:"Green Valley PG", phone:"9456789012", rent:7500, paid:false, joinDate:"2026-09-01", endDate:"2027-09-01", aadhaar:"XXXX-XXXX-1123", status:"due", gender:"F", occupation:"Accountant, KPMG" },
-  { name:"Rahul Pandey", room:"G03", property:"Sri Sai PG", phone:"9112233445", rent:7500, paid:true, joinDate:"2026-04-01", endDate:"2027-04-01", aadhaar:"XXXX-XXXX-3356", status:"active", gender:"M", occupation:"ML Engineer, Google" },
-  { name:"Divya Mehta", room:"201", property:"Sri Sai PG", phone:"9223344556", rent:8000, paid:true, joinDate:"2026-06-15", endDate:"2027-06-15", aadhaar:"XXXX-XXXX-7789", status:"active", gender:"F", occupation:"Business Analyst, Capgemini" },
+  { name:"Priya Sharma", room:"204", property:"Sri Sai PG", phone:"9876543210", rent:7500, paid:true, joinDate:"2026-03-15", endDate:"2026-10-31", idType:"Aadhaar", idNum:"XXXX-XXXX-4521", status:"expiring", gender:"F", nativeAddr:"Warangal, Telangana", emergencyName:"Suresh Sharma", emergencyPhone:"9876000111" },
+  { name:"Sneha Reddy", room:"102", property:"Sri Sai PG", phone:"9845123456", rent:8500, paid:true, joinDate:"2026-01-10", endDate:"2027-01-10", idType:"Aadhaar", idNum:"XXXX-XXXX-7832", status:"active", gender:"F", nativeAddr:"Vijayawada, Andhra Pradesh", emergencyName:"Ramesh Reddy", emergencyPhone:"9845000222" },
+  { name:"Vikram Desai", room:"203", property:"Sri Sai PG", phone:"9123456780", rent:8000, paid:false, partialAmt:4000, joinDate:"2026-06-01", endDate:"2027-06-01", idType:"PAN", idNum:"ABCDE1234F", status:"due", gender:"M", nativeAddr:"Pune, Maharashtra", emergencyName:"Sunita Desai", emergencyPhone:"9123000333" },
+  { name:"Arjun Kapoor", room:"302", property:"Lakshmi Residency", phone:"9988776655", rent:9000, paid:false, joinDate:"2026-02-01", endDate:"2026-11-05", idType:"Driving Licence", idNum:"TS09-2021-00456", status:"expiring", gender:"M", nativeAddr:"Delhi", emergencyName:"Rakesh Kapoor", emergencyPhone:"9988000444" },
+  { name:"Mohammed Irfan", room:"301", property:"Lakshmi Residency", phone:"9009876543", rent:9200, paid:true, joinDate:"2026-04-20", endDate:"2027-04-20", idType:"Aadhaar", idNum:"XXXX-XXXX-6678", status:"active", gender:"M", nativeAddr:"Karimnagar, Telangana", emergencyName:"Fatima Begum", emergencyPhone:"9009000555" },
+  { name:"Kavya Nair", room:"G01", property:"Sri Sai PG", phone:"9567890123", rent:7000, paid:true, joinDate:"2026-05-12", endDate:"2027-05-12", idType:"Aadhaar", idNum:"XXXX-XXXX-2245", status:"active", gender:"F", nativeAddr:"Kochi, Kerala", emergencyName:"Vijay Nair", emergencyPhone:"9567000666" },
+  { name:"Ravi Teja", room:"103", property:"Sri Sai PG", phone:"9345678901", rent:7500, paid:false, joinDate:"2026-07-01", endDate:"2027-07-01", idType:"PAN", idNum:"FGHIJ5678K", status:"due", gender:"M", nativeAddr:"Vizag, Andhra Pradesh", emergencyName:"Lakshmi Teja", emergencyPhone:"9345000777" },
+  { name:"Ananya Iyer", room:"201", property:"Lakshmi Residency", phone:"9234567890", rent:8500, paid:true, joinDate:"2026-08-15", endDate:"2027-08-15", idType:"Aadhaar", idNum:"XXXX-XXXX-5567", status:"active", gender:"F", nativeAddr:"Chennai, Tamil Nadu", emergencyName:"Subramaniam Iyer", emergencyPhone:"9234000888" },
+  { name:"Sai Krishna", room:"G02", property:"Green Valley PG", phone:"9678901234", rent:7000, paid:true, joinDate:"2026-02-10", endDate:"2027-02-10", idType:"Aadhaar", idNum:"XXXX-XXXX-8834", status:"active", gender:"M", nativeAddr:"Guntur, Andhra Pradesh", emergencyName:"Krishna Rao", emergencyPhone:"9678000999" },
+  { name:"Meera Joshi", room:"101", property:"Green Valley PG", phone:"9456789012", rent:7500, paid:false, joinDate:"2026-09-01", endDate:"2027-09-01", idType:"Driving Licence", idNum:"MH12-2020-00789", status:"due", gender:"F", nativeAddr:"Nagpur, Maharashtra", emergencyName:"Anil Joshi", emergencyPhone:"9456000111" },
+  { name:"Rahul Pandey", room:"G03", property:"Sri Sai PG", phone:"9112233445", rent:7500, paid:true, joinDate:"2026-04-01", endDate:"2027-04-01", idType:"Aadhaar", idNum:"XXXX-XXXX-3356", status:"active", gender:"M", nativeAddr:"Lucknow, Uttar Pradesh", emergencyName:"Meena Pandey", emergencyPhone:"9112000222" },
+  { name:"Divya Mehta", room:"201", property:"Sri Sai PG", phone:"9223344556", rent:8000, paid:true, joinDate:"2026-06-15", endDate:"2027-06-15", idType:"PAN", idNum:"LMNOP9012Q", status:"active", gender:"F", nativeAddr:"Ahmedabad, Gujarat", emergencyName:"Rajiv Mehta", emergencyPhone:"9223000333" },
 ];
 
 const invoices = [
@@ -943,7 +953,13 @@ function showRoomDetail(room) {
 
   document.getElementById('sheetContent').innerHTML = `
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Room ${room.num}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div class="sheet-title" style="margin-bottom:0;">Room ${room.num}</div>
+      <button class="btn btn-ghost btn-sm" onclick='showRoomEdit(${JSON.stringify(room).replace(/'/g,"&#39;")})' style="padding:6px;color:var(--blue);font-size:12px;gap:4px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit
+      </button>
+    </div>
     <div class="detail-row"><span class="detail-label">Room type</span><span class="detail-value">${room.type} sharing</span></div>
     <div class="detail-row"><span class="detail-label">Capacity</span><span class="detail-value">${room.cap} beds</span></div>
     <div class="detail-row"><span class="detail-label">Occupied</span><span class="detail-value">${room.filled} beds</span></div>
@@ -998,22 +1014,34 @@ function filterByStatus(status, btn) {
 function showTenantDetail(idx) {
   const t = tenants[idx];
   const colors = t.gender === 'F' ? 'background:var(--blue-light);color:var(--blue);' : 'background:var(--green-light);color:var(--green);';
-  const payStatus = t.paid ? `<span class="badge badge-green">Paid \u2014 ₹${t.rent.toLocaleString('en-IN')}</span>` :
-                    t.partialAmt ? `<span class="badge badge-amber">Partial \u2014 ₹${t.partialAmt.toLocaleString('en-IN')} of ₹${t.rent.toLocaleString('en-IN')}</span>` :
-                    `<span class="badge badge-red">Unpaid \u2014 ₹${t.rent.toLocaleString('en-IN')}</span>`;
+  const payStatus = t.paid ? `<span class="badge badge-green">Paid — ₹${t.rent.toLocaleString('en-IN')}</span>` :
+                    t.partialAmt ? `<span class="badge badge-amber">Partial — ₹${t.partialAmt.toLocaleString('en-IN')} of ₹${t.rent.toLocaleString('en-IN')}</span>` :
+                    `<span class="badge badge-red">Unpaid — ₹${t.rent.toLocaleString('en-IN')}</span>`;
 
   document.getElementById('sheetContent').innerHTML = `
     <div class="sheet-handle"></div>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-      <div class="tenant-avatar" style="${colors};width:48px;height:48px;font-size:18px;">${t.name.split(' ').map(w=>w[0]).join('')}</div>
-      <div>
-        <div style="font-size:17px;font-weight:700;">${t.name}</div>
-        <div style="font-size:13px;color:var(--text-secondary);">${t.occupation}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="tenant-avatar" style="${colors};width:48px;height:48px;font-size:18px;">${t.name.split(' ').map(w=>w[0]).join('')}</div>
+        <div>
+          <div style="font-size:17px;font-weight:700;">${t.name}</div>
+          <div style="font-size:13px;color:var(--text-secondary);">${t.occupation}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px;">
+        <button class="btn btn-ghost btn-sm" onclick="editTenant(${idx})" title="Edit" style="padding:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="deleteTenant(${idx})" title="Remove" style="padding:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </button>
       </div>
     </div>
-    <div class="detail-row"><span class="detail-label">Room</span><span class="detail-value">${t.room} \u00b7 ${t.property}</span></div>
+    <div class="detail-row"><span class="detail-label">Room</span><span class="detail-value">${t.room} · ${t.property}</span></div>
     <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value">${t.phone}</span></div>
-    <div class="detail-row"><span class="detail-label">Aadhaar</span><span class="detail-value">${t.aadhaar}</span></div>
+    <div class="detail-row"><span class="detail-label">Native address</span><span class="detail-value">${t.nativeAddr || '—'}</span></div>
+    <div class="detail-row"><span class="detail-label">ID proof</span><span class="detail-value">${t.idType}: ${t.idNum}</span></div>
+    <div class="detail-row"><span class="detail-label">Emergency</span><span class="detail-value">${t.emergencyName || '—'}<br><span style="color:var(--text-muted);font-size:12px;">${t.emergencyPhone || ''}</span></span></div>
     <div class="detail-row"><span class="detail-label">Rent</span><span class="detail-value">₹${t.rent.toLocaleString('en-IN')}/month</span></div>
     <div class="detail-row"><span class="detail-label">Oct payment</span><span class="detail-value">${payStatus}</span></div>
     <div class="detail-row"><span class="detail-label">Move-in</span><span class="detail-value">${formatDate(t.joinDate)}</span></div>
@@ -1026,11 +1054,124 @@ function showTenantDetail(idx) {
   openSheet();
 }
 
+function editTenant(idx) {
+  const t = tenants[idx];
+  const allRoomOptions = properties.flatMap(p =>
+    p.floors.flatMap(f =>
+      f.rooms.map(r => {
+        const sel = (r.num === t.room && p.name === t.property) ? 'selected' : '';
+        return `<option value="${r.num}|${p.name}" ${sel}>${r.num} — ${p.name}</option>`;
+      })
+    )
+  ).join('');
+
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Edit tenant</div>
+    <div class="form-group">
+      <label class="form-label">Full name</label>
+      <input class="form-input" value="${t.name}" id="editName">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" value="${t.phone}" id="editPhone">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender</label>
+        <select class="form-input" id="editGender">
+          <option value="F" ${t.gender==='F'?'selected':''}>Female</option>
+          <option value="M" ${t.gender==='M'?'selected':''}>Male</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Assigned room</label>
+      <select class="form-input" id="editRoom">${allRoomOptions}</select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Native address</label>
+      <input class="form-input" value="${t.nativeAddr || ''}" placeholder="City, State" id="editAddr">
+    </div>
+    <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin:14px 0 8px;">ID proof</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">ID type</label>
+        <select class="form-input" id="editIdType">
+          <option value="Aadhaar" ${t.idType==='Aadhaar'?'selected':''}>Aadhaar</option>
+          <option value="PAN" ${t.idType==='PAN'?'selected':''}>PAN Card</option>
+          <option value="Driving Licence" ${t.idType==='Driving Licence'?'selected':''}>Driving Licence</option>
+          <option value="Voter ID" ${t.idType==='Voter ID'?'selected':''}>Voter ID</option>
+          <option value="Passport" ${t.idType==='Passport'?'selected':''}>Passport</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ID number</label>
+        <input class="form-input" value="${t.idNum || ''}" id="editIdNum">
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin:14px 0 8px;">Emergency contact</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Contact name</label>
+        <input class="form-input" value="${t.emergencyName || ''}" placeholder="Parent / guardian" id="editEmName">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contact phone</label>
+        <input class="form-input" value="${t.emergencyPhone || ''}" placeholder="9XXXXXXXXX" id="editEmPhone">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Monthly rent</label>
+        <input class="form-input" value="${t.rent}" id="editRent">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Stay until</label>
+        <input class="form-input" type="date" value="${t.endDate}" id="editEnd">
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:4px;" onclick="saveTenantEdit(${idx})">Save changes</button>
+  `;
+}
+
+function saveTenantEdit(idx) {
+  const t = tenants[idx];
+  t.name = document.getElementById('editName').value.trim() || t.name;
+  t.phone = document.getElementById('editPhone').value || t.phone;
+  t.gender = document.getElementById('editGender').value;
+  const rv = document.getElementById('editRoom').value.split('|');
+  t.room = rv[0]; t.property = rv[1];
+  t.nativeAddr = document.getElementById('editAddr').value || t.nativeAddr;
+  t.idType = document.getElementById('editIdType').value;
+  t.idNum = document.getElementById('editIdNum').value || t.idNum;
+  t.emergencyName = document.getElementById('editEmName').value || t.emergencyName;
+  t.emergencyPhone = document.getElementById('editEmPhone').value || t.emergencyPhone;
+  t.rent = parseInt(document.getElementById('editRent').value.replace(/\D/g,'')) || t.rent;
+  t.endDate = document.getElementById('editEnd').value || t.endDate;
+  closeSheetDirect();
+  filterTenants();
+  showToast(`${t.name} updated`);
+}
+
+function deleteTenant(idx) {
+  const name = tenants[idx].name;
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Remove tenant</div>
+    <div style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;">Are you sure you want to remove <strong>${name}</strong>? This will free up their bed and mark the room accordingly.</div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-block btn-sm" style="background:var(--red);color:white;" onclick="confirmDeleteTenant(${idx})">Remove tenant</button>
+      <button class="btn btn-outline btn-block btn-sm" onclick="showTenantDetail(${idx})">Cancel</button>
+    </div>
+  `;
+}
+
 function openAddTenant() {
   const roomOptions = properties.flatMap(p =>
     p.floors.flatMap(f =>
       f.rooms.filter(r => r.status !== 'occupied' && r.status !== 'maintenance')
-        .map(r => `<option value="${r.num}|${p.name}">${r.num} \u2014 ${p.name} (${r.cap - r.filled} beds free)</option>`)
+        .map(r => `<option value="${r.num}|${p.name}">${r.num} — ${p.name} (${r.cap - r.filled} beds free)</option>`)
     )
   ).join('');
 
@@ -1055,6 +1196,38 @@ function openAddTenant() {
       <label class="form-label">Assign room</label>
       <select class="form-input" id="newRoom">${roomOptions}</select>
     </div>
+    <div class="form-group">
+      <label class="form-label">Native address</label>
+      <input class="form-input" placeholder="City, State" id="newAddr">
+    </div>
+    <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin:14px 0 8px;">ID proof</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">ID type</label>
+        <select class="form-input" id="newIdType">
+          <option value="Aadhaar">Aadhaar</option>
+          <option value="PAN">PAN Card</option>
+          <option value="Driving Licence">Driving Licence</option>
+          <option value="Voter ID">Voter ID</option>
+          <option value="Passport">Passport</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ID number</label>
+        <input class="form-input" placeholder="XXXX-XXXX-1234" id="newIdNum">
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin:14px 0 8px;">Emergency contact</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Contact name</label>
+        <input class="form-input" placeholder="Parent / guardian" id="newEmName">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contact phone</label>
+        <input class="form-input" placeholder="9XXXXXXXXX" id="newEmPhone">
+      </div>
+    </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Monthly rent</label>
@@ -1062,12 +1235,8 @@ function openAddTenant() {
       </div>
       <div class="form-group">
         <label class="form-label">Move-in date</label>
-        <input class="form-input" type="date" value="2026-10-26" id="newDate">
+        <input class="form-input" type="date" value="2026-10-27" id="newDate">
       </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Occupation</label>
-      <input class="form-input" placeholder="e.g. Software Engineer, TCS" id="newOcc">
     </div>
     <button class="btn btn-primary btn-block" style="margin-top:4px;" onclick="addTenant()">Add tenant</button>
   `;
@@ -1085,12 +1254,15 @@ function addTenant() {
     phone: document.getElementById('newPhone').value || '9000000000',
     rent: parseInt(document.getElementById('newRent').value.replace(/\D/g,'')) || 7500,
     paid: false,
-    joinDate: document.getElementById('newDate').value || '2026-10-26',
-    endDate: '2027-10-26',
-    aadhaar: 'XXXX-XXXX-0000',
+    joinDate: document.getElementById('newDate').value || '2026-10-27',
+    endDate: '2027-10-27',
+    idType: document.getElementById('newIdType').value,
+    idNum: document.getElementById('newIdNum').value || 'Not provided',
     status: 'active',
     gender: document.getElementById('newGender').value,
-    occupation: document.getElementById('newOcc').value || 'Not specified'
+    nativeAddr: document.getElementById('newAddr').value || '',
+    emergencyName: document.getElementById('newEmName').value || '',
+    emergencyPhone: document.getElementById('newEmPhone').value || ''
   });
   closeSheetDirect();
   filterTenants();
@@ -1185,6 +1357,327 @@ function openGenInvoice() {
     <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="showToast('38 invoices generated for November');closeSheetDirect();">Generate 38 invoices</button>
   `;
   openSheet();
+}
+
+function confirmDeleteTenant(idx) {
+  const name = tenants[idx].name;
+  tenants.splice(idx, 1);
+  closeSheetDirect();
+  filterTenants();
+  showToast(`${name} removed`);
+}
+
+// ===== VACANT ROOMS (from dashboard KPI) =====
+function showVacantRooms() {
+  let html = `<div class="sheet-handle"></div>
+    <div class="sheet-title">Vacant &amp; available beds</div>
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">Tap a room to assign a new tenant directly.</div>`;
+  let count = 0;
+  properties.forEach(p => {
+    const vacantRooms = p.floors.flatMap(f => f.rooms.filter(r => r.status === 'vacant' || r.status === 'partial'));
+    if (!vacantRooms.length) return;
+    html += `<div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin:12px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">${p.name}</div>`;
+    vacantRooms.forEach(r => {
+      const free = r.cap - r.filled;
+      count += free;
+      const badge = r.status === 'vacant' ? 'badge-green' : 'badge-amber';
+      const label = r.status === 'vacant' ? 'Empty' : `${r.filled}/${r.cap} filled`;
+      html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;" onclick="openAddTenantForRoom('${r.num}','${p.name}',${r.cap - r.filled})">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:38px;height:38px;border-radius:8px;background:${r.status==='vacant'?'var(--green-light)':'var(--amber-light)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:${r.status==='vacant'?'var(--green)':'var(--amber)'};">${r.num}</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;">Room ${r.num}</div>
+            <div style="font-size:12px;color:var(--text-secondary);">${r.type} sharing · ${free} bed${free>1?'s':''} free</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="badge ${badge}">${label}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>`;
+    });
+  });
+  document.getElementById('sheetContent').innerHTML = html;
+  openSheet();
+}
+
+function openAddTenantForRoom(roomNum, propName, freeBeds) {
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Add tenant to Room ${roomNum}</div>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--blue-light);border-radius:8px;margin-bottom:14px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span style="font-size:13px;font-weight:500;color:var(--blue);">Room ${roomNum} · ${propName} · ${freeBeds} bed${freeBeds>1?'s':''} free</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Full name</label>
+      <input class="form-input" placeholder="e.g. Aisha Khan" id="newName">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" placeholder="9XXXXXXXXX" id="newPhone">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender</label>
+        <select class="form-input" id="newGender"><option value="F">Female</option><option value="M">Male</option></select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Native address</label>
+      <input class="form-input" placeholder="City, State" id="newAddr">
+    </div>
+    <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin:14px 0 8px;">ID proof</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">ID type</label>
+        <select class="form-input" id="newIdType">
+          <option value="Aadhaar">Aadhaar</option>
+          <option value="PAN">PAN Card</option>
+          <option value="Driving Licence">Driving Licence</option>
+          <option value="Voter ID">Voter ID</option>
+          <option value="Passport">Passport</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ID number</label>
+        <input class="form-input" placeholder="XXXX-XXXX-1234" id="newIdNum">
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin:14px 0 8px;">Emergency contact</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Contact name</label>
+        <input class="form-input" placeholder="Parent / guardian" id="newEmName">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contact phone</label>
+        <input class="form-input" placeholder="9XXXXXXXXX" id="newEmPhone">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Monthly rent</label>
+        <input class="form-input" placeholder="₹7,500" id="newRent">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Move-in date</label>
+        <input class="form-input" type="date" value="2026-10-27" id="newDate">
+      </div>
+    </div>
+    <input type="hidden" id="newRoom" value="${roomNum}|${propName}">
+    <button class="btn btn-primary btn-block" style="margin-top:4px;" onclick="addTenant()">Add tenant</button>
+  `;
+}
+
+// ===== ROOM EDIT =====
+function showRoomEdit(room) {
+  const p = properties[currentProp];
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Edit Room ${room.num}</div>
+    <div class="form-group">
+      <label class="form-label">Room number</label>
+      <input class="form-input" value="${room.num}" id="editRoomNum">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Room type</label>
+        <select class="form-input" id="editRoomType">
+          <option value="Single" ${room.type==='Single'?'selected':''}>Single</option>
+          <option value="Double" ${room.type==='Double'?'selected':''}>Double</option>
+          <option value="Triple" ${room.type==='Triple'?'selected':''}>Triple</option>
+          <option value="Dormitory" ${room.type==='Dormitory'?'selected':''}>Dormitory</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bed capacity</label>
+        <input class="form-input" type="number" value="${room.cap}" min="1" max="10" id="editRoomCap">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-input" id="editRoomStatus">
+        <option value="occupied" ${room.status==='occupied'?'selected':''}>Occupied</option>
+        <option value="partial" ${room.status==='partial'?'selected':''}>Partially occupied</option>
+        <option value="vacant" ${room.status==='vacant'?'selected':''}>Vacant</option>
+        <option value="maintenance" ${room.status==='maintenance'?'selected':''}>Under maintenance</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px;">
+      <button class="btn btn-primary btn-block" onclick="saveRoomEdit('${room.num}')">Save changes</button>
+      <button class="btn btn-outline btn-block" onclick="renderProperty();closeSheetDirect();">Cancel</button>
+    </div>
+  `;
+}
+
+function saveRoomEdit(origNum) {
+  const p = properties[currentProp];
+  for (const f of p.floors) {
+    const r = f.rooms.find(rm => rm.num === origNum);
+    if (r) {
+      r.num = document.getElementById('editRoomNum').value || r.num;
+      r.type = document.getElementById('editRoomType').value;
+      r.cap = parseInt(document.getElementById('editRoomCap').value) || r.cap;
+      r.status = document.getElementById('editRoomStatus').value;
+      break;
+    }
+  }
+  closeSheetDirect();
+  renderProperty();
+  showToast(`Room updated`);
+}
+
+// ===== REPORT BUILDER =====
+function openReportBuilder() {
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Generate report</div>
+
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">Quick presets</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;" id="presetBtns">
+      <button class="filter-pill active" onclick="applyPreset('monthly',this)">Monthly summary</button>
+      <button class="filter-pill" onclick="applyPreset('overdue',this)">Overdue report</button>
+      <button class="filter-pill" onclick="applyPreset('occupancy',this)">Occupancy report</button>
+      <button class="filter-pill" onclick="applyPreset('revenue',this)">Revenue by property</button>
+      <button class="filter-pill" onclick="applyPreset('tenant',this)">Tenant ledger</button>
+    </div>
+
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">Or build custom</div>
+    <div class="form-group">
+      <label class="form-label">Report type</label>
+      <select class="form-input" id="rptType">
+        <option value="collection">Collection summary</option>
+        <option value="overdue">Overdue payments</option>
+        <option value="occupancy">Occupancy status</option>
+        <option value="revenue">Revenue breakdown</option>
+        <option value="expense">Expense report</option>
+        <option value="tenant">Tenant ledger</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">From</label>
+        <input class="form-input" type="date" value="2026-10-01" id="rptFrom">
+      </div>
+      <div class="form-group">
+        <label class="form-label">To</label>
+        <input class="form-input" type="date" value="2026-10-26" id="rptTo">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Property</label>
+      <select class="form-input" id="rptProp">
+        <option value="all">All properties</option>
+        <option value="Sri Sai PG">Sri Sai PG — Madhapur</option>
+        <option value="Lakshmi Residency">Lakshmi Residency — Banjara Hills</option>
+        <option value="Green Valley PG">Green Valley PG — Gachibowli</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Payment status</label>
+      <select class="form-input" id="rptStatus">
+        <option value="all">All</option>
+        <option value="paid">Paid only</option>
+        <option value="pending">Pending only</option>
+        <option value="overdue">Overdue only</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Format</label>
+      <div style="display:flex;gap:8px;">
+        <label style="flex:1;display:flex;align-items:center;gap:6px;padding:10px 12px;border:1.5px solid var(--blue);border-radius:8px;background:var(--blue-light);font-size:13px;font-weight:500;color:var(--blue);cursor:pointer;">
+          <input type="radio" name="rptFmt" value="pdf" checked style="accent-color:var(--blue);"> PDF
+        </label>
+        <label style="flex:1;display:flex;align-items:center;gap:6px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;">
+          <input type="radio" name="rptFmt" value="excel" style="accent-color:var(--blue);"> Excel
+        </label>
+        <label style="flex:1;display:flex;align-items:center;gap:6px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;">
+          <input type="radio" name="rptFmt" value="email" style="accent-color:var(--blue);"> Email
+        </label>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:4px;" onclick="generateReport()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Generate report
+    </button>
+  `;
+  openSheet();
+}
+
+function applyPreset(preset, btn) {
+  document.querySelectorAll('#presetBtns .filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const type = document.getElementById('rptType');
+  const status = document.getElementById('rptStatus');
+  const from = document.getElementById('rptFrom');
+  const to = document.getElementById('rptTo');
+  const prop = document.getElementById('rptProp');
+  switch(preset) {
+    case 'monthly':
+      type.value = 'collection'; status.value = 'all'; from.value = '2026-10-01'; to.value = '2026-10-31'; prop.value = 'all'; break;
+    case 'overdue':
+      type.value = 'overdue'; status.value = 'overdue'; from.value = '2026-10-01'; to.value = '2026-10-26'; prop.value = 'all'; break;
+    case 'occupancy':
+      type.value = 'occupancy'; status.value = 'all'; from.value = '2026-10-01'; to.value = '2026-10-26'; prop.value = 'all'; break;
+    case 'revenue':
+      type.value = 'revenue'; status.value = 'paid'; from.value = '2026-10-01'; to.value = '2026-10-31'; prop.value = 'all'; break;
+    case 'tenant':
+      type.value = 'tenant'; status.value = 'all'; from.value = '2026-10-01'; to.value = '2026-10-31'; prop.value = 'all'; break;
+  }
+}
+
+function generateReport() {
+  const type = document.getElementById('rptType');
+  const labels = { collection:'Collection summary', overdue:'Overdue payments', occupancy:'Occupancy status', revenue:'Revenue breakdown', expense:'Expense report', tenant:'Tenant ledger' };
+  const prop = document.getElementById('rptProp').value;
+  const propLabel = prop === 'all' ? 'all properties' : prop;
+  const fmt = document.querySelector('input[name=rptFmt]:checked').value.toUpperCase();
+  const from = document.getElementById('rptFrom').value;
+  const to = document.getElementById('rptTo').value;
+
+  // Simulated report preview
+  document.getElementById('sheetContent').innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">${labels[type.value]}</div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;">${formatDate(from)} — ${formatDate(to)} · ${propLabel}</div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+        <div style="text-align:center;flex:1;"><div style="font-size:20px;font-weight:700;color:var(--green);">₹4.2L</div><div style="font-size:11px;color:var(--text-muted);">Collected</div></div>
+        <div style="text-align:center;flex:1;border-left:1px solid var(--border);border-right:1px solid var(--border);"><div style="font-size:20px;font-weight:700;color:var(--amber);">₹76K</div><div style="font-size:11px;color:var(--text-muted);">Pending</div></div>
+        <div style="text-align:center;flex:1;"><div style="font-size:20px;font-weight:700;color:var(--red);">₹34K</div><div style="font-size:11px;color:var(--text-muted);">Overdue</div></div>
+      </div>
+      <div class="billing-bar" style="margin:8px 0 0;">
+        <div class="bar-paid" style="width:65%"></div>
+        <div class="bar-pending" style="width:20%"></div>
+        <div class="bar-overdue" style="width:15%"></div>
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
+      <div style="display:flex;background:var(--bg-page);padding:8px 12px;font-size:11px;font-weight:600;color:var(--text-secondary);">
+        <div style="flex:2;">Property</div><div style="flex:1;text-align:right;">Collected</div><div style="flex:1;text-align:right;">Due</div><div style="flex:1;text-align:center;">Rate</div>
+      </div>
+      <div style="display:flex;padding:10px 12px;font-size:12px;border-top:1px solid var(--border);">
+        <div style="flex:2;font-weight:500;">Sri Sai PG</div><div style="flex:1;text-align:right;color:var(--green);">₹2.4L</div><div style="flex:1;text-align:right;color:var(--red);">₹16K</div><div style="flex:1;text-align:center;"><span class="badge badge-green">94%</span></div>
+      </div>
+      <div style="display:flex;padding:10px 12px;font-size:12px;border-top:1px solid var(--border);">
+        <div style="flex:2;font-weight:500;">Lakshmi Residency</div><div style="flex:1;text-align:right;color:var(--green);">₹1.1L</div><div style="flex:1;text-align:right;color:var(--amber);">₹9K</div><div style="flex:1;text-align:center;"><span class="badge badge-amber">81%</span></div>
+      </div>
+      <div style="display:flex;padding:10px 12px;font-size:12px;border-top:1px solid var(--border);">
+        <div style="flex:2;font-weight:500;">Green Valley PG</div><div style="flex:1;text-align:right;color:var(--green);">₹70K</div><div style="flex:1;text-align:right;color:var(--red);">₹9K</div><div style="flex:1;text-align:center;"><span class="badge badge-amber">78%</span></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary btn-block btn-sm" onclick="showToast('${fmt} report downloaded');closeSheetDirect();">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download ${fmt}
+      </button>
+      <button class="btn btn-outline btn-block btn-sm" onclick="showToast('Report shared via WhatsApp');closeSheetDirect();">Share</button>
+    </div>
+  `;
 }
 
 // ===== SHEET & TOAST =====

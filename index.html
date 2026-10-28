@@ -406,14 +406,18 @@ body::before {
   to { transform: translateY(0); }
 }
 .sheet-handle {
-  width: 36px;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  margin: 0 auto 16px;
+  width: 40px;
+  height: 5px;
+  background: #CBD5E1;
+  border-radius: 3px;
+  margin: 4px auto 16px;
   cursor: pointer;
-  padding: 10px 0;
-  background-clip: content-box;
+  position: relative;
+}
+.sheet-handle::before {
+  content: "";
+  position: absolute;
+  inset: -10px -20px;
 }
 .sheet-title {
   font-size: 17px;

@@ -64,7 +64,8 @@ html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   --shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+input, textarea, select, [contenteditable] { -webkit-user-select: text; user-select: text; }
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--bg-page);
@@ -606,7 +607,7 @@ select.form-input {
 <div id="page-dashboard" class="page active">
   <div style="margin-bottom:16px;">
     <div style="font-size:22px;font-weight:700;">Good evening, Rajesh</div>
-    <div style="font-size:13px;color:var(--text-secondary);">Here\u2019s how your properties are doing today.</div>
+    <div style="font-size:13px;color:var(--text-secondary);">Here's how your properties are doing today.</div>
   </div>
 
   <div class="stat-grid">
@@ -634,7 +635,7 @@ select.form-input {
       <div class="tenant-avatar" style="background:var(--amber-light);color:var(--amber);">PS</div>
       <div class="tenant-info">
         <div class="tenant-name">Priya Sharma</div>
-        <div class="tenant-detail">Room 204 \u00b7 Leaves Oct 31</div>
+        <div class="tenant-detail">Room 204 · Leaves Oct 31</div>
       </div>
       <span class="badge badge-amber">5 days</span>
     </div>
@@ -642,7 +643,7 @@ select.form-input {
       <div class="tenant-avatar" style="background:var(--red-light);color:var(--red);">AK</div>
       <div class="tenant-info">
         <div class="tenant-name">Arjun Kapoor</div>
-        <div class="tenant-detail">Room 302 \u00b7 Leaves Nov 5</div>
+        <div class="tenant-detail">Room 302 · Leaves Nov 5</div>
       </div>
       <span class="badge badge-red">10 days</span>
     </div>
@@ -653,7 +654,7 @@ select.form-input {
     <div class="invoice-row">
       <div>
         <div class="invoice-tenant">Sneha Reddy</div>
-        <div class="invoice-meta">Room 102 \u00b7 Today, 3:42 PM</div>
+        <div class="invoice-meta">Room 102 · Today, 3:42 PM</div>
       </div>
       <div style="text-align:right">
         <div class="invoice-amount" style="color:var(--green);">₹8,500</div>
@@ -663,7 +664,7 @@ select.form-input {
     <div class="invoice-row">
       <div>
         <div class="invoice-tenant">Mohammed Irfan</div>
-        <div class="invoice-meta">Room 301 \u00b7 Yesterday</div>
+        <div class="invoice-meta">Room 301 · Yesterday</div>
       </div>
       <div style="text-align:right">
         <div class="invoice-amount" style="color:var(--green);">₹9,200</div>
@@ -673,7 +674,7 @@ select.form-input {
     <div class="invoice-row">
       <div>
         <div class="invoice-tenant">Vikram Desai</div>
-        <div class="invoice-meta">Room 203 \u00b7 Oct 22</div>
+        <div class="invoice-meta">Room 203 · Oct 22</div>
       </div>
       <div style="text-align:right">
         <div class="invoice-amount" style="color:var(--amber);">₹4,000</div>
@@ -686,7 +687,7 @@ select.form-input {
 <!-- ==================== PROPERTY PAGE ==================== -->
 <div id="page-property" class="page">
   <div class="section-title" style="font-size:17px;margin-bottom:4px;">Properties</div>
-  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">3 properties \u00b7 52 beds total</div>
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">3 properties · 52 beds total</div>
 
   <div class="prop-tabs" id="propTabs">
     <button class="prop-tab active" onclick="switchProperty(0,this)">Sri Sai PG</button>
@@ -709,7 +710,7 @@ select.form-input {
 
   <div class="search-bar">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-    <input type="text" placeholder="Search tenants\u2026" id="tenantSearch" oninput="filterTenants()">
+    <input type="text" placeholder="Search tenants…" id="tenantSearch" oninput="filterTenants()">
   </div>
 
   <div class="filter-row" id="tenantFilters">
@@ -1072,7 +1073,7 @@ function renderTenants(list) {
       <div class="tenant-avatar" style="${colors}">${t.name.split(' ').map(w=>w[0]).join('')}</div>
       <div class="tenant-info">
         <div class="tenant-name">${t.name}</div>
-        <div class="tenant-detail">${t.room} \u00b7 ${t.property}</div>
+        <div class="tenant-detail">${t.room} · ${t.property}</div>
       </div>
       <div class="tenant-right">${statusBadge}</div>
     </div>`;
@@ -1368,7 +1369,7 @@ function renderInvoices() {
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div>
           <div style="font-size:14px;font-weight:600;">${inv.tenant}</div>
-          <div style="font-size:12px;color:var(--text-secondary);">Room ${inv.room} \u00b7 ${inv.date}</div>
+          <div style="font-size:12px;color:var(--text-secondary);">Room ${inv.room} · ${inv.date}</div>
         </div>
         <div style="text-align:right;">
           <div style="font-size:16px;font-weight:700;color:${color};">₹${inv.amount.toLocaleString('en-IN')}</div>
@@ -1403,9 +1404,9 @@ function showInvoiceDetail(idx) {
 
   document.getElementById('sheetContent').innerHTML = `
     <div class="sheet-handle" onclick="closeSheetDirect()"></div>
-    <div class="sheet-title">Invoice \u2014 ${inv.tenant}</div>
+    <div class="sheet-title">Invoice — ${inv.tenant}</div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div style="font-size:13px;color:var(--text-secondary);">Room ${inv.room} \u00b7 October 2026</div>
+      <div style="font-size:13px;color:var(--text-secondary);">Room ${inv.room} · October 2026</div>
       <span class="badge ${inv.status==='paid'?'badge-green':inv.status==='overdue'?'badge-red':'badge-amber'}">${inv.status.charAt(0).toUpperCase()+inv.status.slice(1)}</span>
     </div>
     <div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;">
@@ -1417,7 +1418,7 @@ function showInvoiceDetail(idx) {
     ${inv.status !== 'paid' ? `<div style="display:flex;gap:8px;">
       <button class="btn btn-primary btn-block btn-sm" onclick="markPaid(${idx})">Mark as paid</button>
       <button class="btn btn-outline btn-block btn-sm" onclick="showToast('Reminder sent via WhatsApp');closeSheetDirect();">Send reminder</button>
-    </div>` : `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:4px 0;">${inv.method} \u00b7 ${inv.date}</div>`}
+    </div>` : `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:4px 0;">${inv.method} · ${inv.date}</div>`}
   `;
   openSheet();
 }
